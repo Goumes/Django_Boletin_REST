@@ -37,3 +37,8 @@ class PatineteViewSet(viewsets.ModelViewSet):
         patinete.save()
         response = Response(serializer.data)
         return Response({'test': 'Hola, esto es un test'}, status=status.HTTP_403_FORBIDDEN)
+
+    def get_queryset(self):
+        #Aqui iría el usuario
+        numero = 2345
+        return Patinete.objects.filter(numero=numero)
