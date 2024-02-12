@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group, User
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import permissions, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -38,6 +39,21 @@ class VehiculoViewSet(viewsets.ModelViewSet):
     ordering_fields = ['fecha_fabricacion']
     ordering = ['fecha_fabricacion']  # Default ordering
     filterset_class = VehiculoFilter
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='marca', description="", required=False, type=str)
+        ]
+    )
+    @action(detail=False, methods=['GET'], description="Filter on marca get parameter")
+    def filtro_marca(self, request):
+        vehiculos_marca = Vehiculo.objects.all()
+        marca = self.request.query_params.get('marca')
+        if marca:
+            vehiculos_marca = vehiculos_marca.filter(marca__nombre=marca)
+
+        serializer = self.get_serializer(vehiculos_marca, many=True)
+        return Response(serializer.data)
 
 
 class MarcaViewSet(viewsets.ModelViewSet):
