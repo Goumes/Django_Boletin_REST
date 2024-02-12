@@ -6,5 +6,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     #ruta para establecer idioma
-    path('', include('vehicle_management.urls'))
+    path('', include('vehicle_management.urls')),
+    path('', include('patinetes.urls'))
 ]
